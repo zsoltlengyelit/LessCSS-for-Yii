@@ -4,6 +4,7 @@
   <pre>
     cd /path/to/your/yii_app/protected/extensions
     mkdir lessCss
+    cd lessCss
     git clone git@github.com:zsoltlengyelit/LessCSS-for-Yii.git
   </pre>
 </p>
