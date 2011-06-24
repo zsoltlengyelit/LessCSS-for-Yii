@@ -1,9 +1,0 @@
-.box-shadow (@x: 0 {
-  box-shadow:   rgba(0,0,0,);
-  -webkit-box-shadow:   rgba(0,0,0,);
-  -moz-box-shadow:   rgba(0,0,0,);
-}
-.box {
-  color:saturate(#f938ab,5%);
-  border-color:lighten(#f938ab,30%);
-}

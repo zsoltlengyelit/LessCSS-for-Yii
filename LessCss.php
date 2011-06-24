@@ -12,7 +12,7 @@
 /**
  * LessCss is a Yii Component to support using less css file easily.
  * @link http://lesscss.org
- * lesscss lets programmers do more geek things and see funny cuts on the web. Because they should write less code.
+ * lesscss lets programmers do more geek things and see funny cats on the web. Because they should write less code.
  * The class based on Leaf Corcoran's <leafot@gmail.com> lessc php parser.
  * If in your Yii application is setted the caching, the {@link compile} method by default do cachin.
  */
@@ -32,39 +32,44 @@ class LessCss extends CComponent
 	  	if(is_null(self::$staticPath))
 	  		self::$staticPath = str_replace('/protected','',Yii::app()->basePath).'/';
 
-	  	$assetName				= str_replace(DIRECTORY_SEPARATOR, '.', str_replace(self::$staticPath,'',$less));
-	  	$assetCss	= dirname(__FILE__).DIRECTORY_SEPARATOR.'assets/css/'.$assetName.'.css';	  	 
+	  	$assetName		= str_replace(DIRECTORY_SEPARATOR, '.', str_replace(self::$staticPath,'',$less));
+	  	$assetCssOrig	= dirname(__FILE__).DIRECTORY_SEPARATOR.'assets/css/'.$assetName.'.css';
+	  	$assetCss = false;
 	  	$parsed = false;
-	  	$lessc  = null;	  	
+	  	$lessc  = null;	
+	  	$wasCached = false;  	
 	  	
 	  	if($cache && !is_null(Yii::app()->cache)){
-	  		$assetCss = Yii::app()->cache->get($less);  		
-	  		
-	  		if($assetCss === false){ // isn't yet cached	
-	  		Yii::app()->user->setFlash('less-parse','Less parsed #1');  			
-	  			
-	  			if(!self::parse(file_get_contents($less),$parsed))
-	  				throw new CException('Cannot parse file: '.$less);	
-	  			else			
-	  				Yii::app()->cache->set($less, $assetCss, 0, new CFileCacheDependency($less));	
-	  						
-	  		}else{  			
-	  			if($returnString) $parsed = file_get_contents($assetCss);	  			
+	  		$assetCssCached = Yii::app()->cache->get($less);
+	  		if(!is_file($assetCssCached)){
+	  			$assetCss = false;  		
+	  			Yii::app()->cache->delete($less);
 	  		}
+	  		
+	  		if($assetCssCached === false){ // isn't yet cached	
+	  			
+	  			Yii::trace('Less parsed by cache: '.$less);				// TRACE	  			
+	  			self::parse(file_get_contents($less),$parsed);
+	  			Yii::app()->cache->set($less, $assetCssOrig, 0, new CFileCacheDependency($less));					
+	  				
+	  		}else{ // is cached
+	  			$wasCached = true;			
+	  			if($returnString) $parsed = file_get_contents($assetCssCached);	  			
+	  		}
+	  		
 	  	}else{ // no cache
-	  	Yii::app()->user->setFlash('less-parse','Less parsed #2');
-	  		if(!self::parse(file_get_contents($less,$parsed)))
-	  			throw new CException('Cannot parse file: '.$less);	  		
+	  		
+	  		Yii::trace('Less parsed by no cache: '.$less);				// TRACE
+	  		self::parse(file_get_contents($less),$parsed);  		  		
+	  		self::putIntoFile($assetCssOrig, $parsed);	
 	  	}
+	  	
+	  	// parsed string or file is done
 	  	
 	  	if($returnString){
 	  		return $parsed;
-	  	}else{
-	  		if(!@file_put_contents($assetCss, $parsed)){
-		 			Yii::app()->cache->delete($less);
-					throw new CException('Error writing file: '.$assetCss);
-	  		}
-	  		return Yii::app()->getAssetManager()->publish($assetCss);	  		
+	  	}else{ 		
+	  		return Yii::app()->getAssetManager()->publish($assetCssOrig);	  		
 	  	}
 	  	
 	}
@@ -96,6 +101,11 @@ class LessCss extends CComponent
 		$output = $parsed; 
 		
 		return true;
+	}
+	
+	protected static function putIntoFile($file, $content){
+		file_put_contents($file, $content);
+		chmod($file,0777);
 	}
 	
 	/**
