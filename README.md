@@ -3,6 +3,7 @@
   Clone this repo into your Yii application'a protected/extensions dir
   <pre>
     cd /path/to/your/yii_app/protected/extensions
+    mkdir lessCss
     git clone git@github.com:zsoltlengyelit/LessCSS-for-Yii.git
   </pre>
 </p>
