@@ -36,7 +36,7 @@
 			Yii::import('ext.lessCss.LessCss');
 
 			Yii::app()->clientScript
-			->registerCSSFile(
+			->registerCSSFile( // appends parsed less to HEAD tag
 			    LessCss::getCssUrl(Yii::app()->theme->basePath.'/assets/css/test.less')
 			    // will try cached parsing
 			);
