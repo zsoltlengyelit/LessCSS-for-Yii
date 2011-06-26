@@ -33,17 +33,13 @@
   // SiteController.php file
   public function actionIndex()
 	{
-		// renders the view file 'protected/views/site/index.php'
-		// using the default layout 'protected/views/layouts/main.php'
-		
-			// Get client script
-
-			$cs=;
 			Yii::import('ext.lessCss.LessCss');
+
 			Yii::app()->clientScript
-			->registerCSSFile(LessCss::getCssUrl(Yii::app()->theme->basePath.'/assets/css/test.less'));		
-			// try cached parsing
-		
+			->registerCSSFile(
+			    LessCss::getCssUrl(Yii::app()->theme->basePath.'/assets/css/test.less')
+			    // will try cached parsing
+			);
 		$this->render('index');
 	}
   </pre>
