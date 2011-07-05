@@ -32,8 +32,9 @@ class LessCss extends CComponent
 	  	if(is_null(self::$staticPath))
 	  		self::$staticPath = str_replace('/protected','',Yii::app()->basePath).'/';
 
-	  	$assetName		= str_replace(DIRECTORY_SEPARATOR, '.', str_replace(self::$staticPath,'',$less));
-	  	$assetCssOrig	= dirname(__FILE__).DIRECTORY_SEPARATOR.'assets/css/'.$assetName.'.css';
+	  	$assetName	= str_replace(DIRECTORY_SEPARATOR, '.', str_replace(self::$staticPath,'',$less));
+	  	$assetName      =  md5($assetName);
+                $assetCssOrig	= dirname(__FILE__).DIRECTORY_SEPARATOR.'assets/css/'.$assetName.'.css';
 	  	$assetCss = false;
 	  	$parsed = false;
 	  	$lessc  = null;	
