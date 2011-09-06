@@ -1,6 +1,6 @@
 <h1>Installation</h1>
 <p>
-  Clone this repo into your Yii application'a protected/extensions dir
+  Clone this repo into your Yii application's protected/extensions dir
   <pre>
     cd /path/to/your/yii_app/protected/extensions
     mkdir lessCss
